@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,3 +26,32 @@ Auth::routes(['verify'=>true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
+Route::get('fillable','App\Http\Controllers\CrudController@getOffers');
+
+
+Route::group([
+    "prefix"=> LaravelLocalization::setLocale(),
+    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
+],
+    function (){
+            Route::group(['prefix'=>'offer'],function (){
+              //  Route::get('store','\App\Http\Controllers\CrudController@store');
+
+                Route::get('create','\App\Http\Controllers\CrudController@create');
+
+                Route::post('store','\App\Http\Controllers\CrudController@store');
+
+                Route::get('all','\App\Http\Controllers\CrudController@showAllOffers');
+
+
+            });
+
+    });
+
+Route::group(['prefix'=>'offers'],function () {
+    //  Route::get('store','\App\Http\Controllers\CrudController@store');
+
+    Route::get('create', '\App\Http\Controllers\CrudController@create');
+
+    Route::post('store', '\App\Http\Controllers\CrudController@store');
+});
